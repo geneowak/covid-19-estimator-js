@@ -1,6 +1,7 @@
 /* eslint-disable operator-linebreak */
 const covid19ImpactEstimator = (data) => {
-  const { reportedCases, timeToElapse, periodType } = data;
+  // eslint-disable-next-line object-curly-newline
+  const { reportedCases, timeToElapse, periodType, totalHospitalBeds } = data;
   let noOfDays = 0;
   switch (periodType) {
     case 'days':
@@ -21,11 +22,16 @@ const covid19ImpactEstimator = (data) => {
   impact.currentlyInfected = reportedCases * 10;
   impact.infectionsByRequestedTime =
     impact.currentlyInfected * projectionMultiplier;
+  impact.severeCasesByRequestedTime = 0.15 * impact.infectionsByRequestedTime;
+  impact.hospitalBedsByRequestedTime = 0.35 * totalHospitalBeds;
 
   const severeImpact = {};
   severeImpact.currentlyInfected = reportedCases * 50;
   severeImpact.infectionsByRequestedTime =
     severeImpact.currentlyInfected * projectionMultiplier;
+  severeImpact.severeCasesByRequestedTime =
+    0.15 * severeImpact.infectionsByRequestedTime;
+  severeImpact.hospitalBedsByRequestedTime = 0.35 * totalHospitalBeds;
 
   return { data, impact, severeImpact };
 };
