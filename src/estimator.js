@@ -16,30 +16,29 @@ const covid19ImpactEstimator = (data) => {
     default:
       throw new Error('Period type not supported.');
   }
-  const factor = noOfDays / 3;
+  const factor = Math.floor(noOfDays / 3);
   const projectionMultiplier = 2 ** factor;
   const impact = {};
   impact.currentlyInfected = reportedCases * 10;
-  impact.infectionsByRequestedTime = Math.floor(
-    impact.currentlyInfected * projectionMultiplier
-  );
+  impact.infectionsByRequestedTime =
+    impact.currentlyInfected * projectionMultiplier;
   impact.severeCasesByRequestedTime = Math.floor(
     0.15 * impact.infectionsByRequestedTime
   );
   impact.hospitalBedsByRequestedTime =
-    Math.floor(0.35 * totalHospitalBeds) - impact.severeCasesByRequestedTime;
+    Math.floor(0.35 * totalHospitalBeds) -
+    0.15 * impact.infectionsByRequestedTime;
 
   const severeImpact = {};
   severeImpact.currentlyInfected = reportedCases * 50;
-  severeImpact.infectionsByRequestedTime = Math.floor(
-    severeImpact.currentlyInfected * projectionMultiplier
-  );
+  severeImpact.infectionsByRequestedTime =
+    severeImpact.currentlyInfected * projectionMultiplier;
   severeImpact.severeCasesByRequestedTime = Math.floor(
     0.15 * severeImpact.infectionsByRequestedTime
   );
   severeImpact.hospitalBedsByRequestedTime =
     Math.floor(0.35 * totalHospitalBeds) -
-    severeImpact.severeCasesByRequestedTime;
+    0.15 * severeImpact.infectionsByRequestedTime;
 
   return { data, impact, severeImpact };
 };
