@@ -25,9 +25,8 @@ const covid19ImpactEstimator = (data) => {
   impact.severeCasesByRequestedTime = Math.floor(
     0.15 * impact.infectionsByRequestedTime
   );
-  impact.hospitalBedsByRequestedTime = Math.floor(
-    0.35 * totalHospitalBeds - impact.severeCasesByRequestedTime
-  );
+  impact.hospitalBedsByRequestedTime =
+    Math.floor(0.35 * totalHospitalBeds) - impact.severeCasesByRequestedTime;
 
   const severeImpact = {};
   severeImpact.currentlyInfected = reportedCases * 50;
@@ -44,3 +43,5 @@ const covid19ImpactEstimator = (data) => {
 };
 
 export default covid19ImpactEstimator;
+// eslint-disable-next-line import/no-extraneous-dependencies
+require('make-runnable');
