@@ -23,19 +23,21 @@ function covid19ImpactEstimator(data) {
   }
   const factor = Math.floor(noOfDays / 3);
   const projectionMultiplier = 2 ** factor;
+  const availableBedsForSevereCases = Math.round(0.35 * totalHospitalBeds);
+
   const impact = {};
   impact.currentlyInfected = reportedCases * 10;
   impact.infectionsByRequestedTime =
     impact.currentlyInfected * projectionMultiplier;
-  impact.severeCasesByRequestedTime = Math.floor(
+  impact.severeCasesByRequestedTime = Math.round(
     0.15 * impact.infectionsByRequestedTime
   );
   impact.hospitalBedsByRequestedTime =
-    Math.round(0.35 * totalHospitalBeds) - impact.severeCasesByRequestedTime;
-  impact.casesForICUByRequestedTime = Math.floor(
+    availableBedsForSevereCases - impact.severeCasesByRequestedTime;
+  impact.casesForICUByRequestedTime = Math.round(
     0.05 * impact.infectionsByRequestedTime
   );
-  impact.casesForVentilatorsByRequestedTime = Math.floor(
+  impact.casesForVentilatorsByRequestedTime = Math.round(
     0.02 * impact.infectionsByRequestedTime
   );
   impact.dollarsInFlight =
@@ -51,16 +53,15 @@ function covid19ImpactEstimator(data) {
   severeImpact.currentlyInfected = reportedCases * 50;
   severeImpact.infectionsByRequestedTime =
     severeImpact.currentlyInfected * projectionMultiplier;
-  severeImpact.severeCasesByRequestedTime = Math.floor(
+  severeImpact.severeCasesByRequestedTime = Math.round(
     0.15 * severeImpact.infectionsByRequestedTime
   );
   severeImpact.hospitalBedsByRequestedTime =
-    Math.round(0.35 * totalHospitalBeds) -
-    severeImpact.severeCasesByRequestedTime;
-  severeImpact.casesForICUByRequestedTime = Math.floor(
+    availableBedsForSevereCases - severeImpact.severeCasesByRequestedTime;
+  severeImpact.casesForICUByRequestedTime = Math.round(
     0.05 * severeImpact.infectionsByRequestedTime
   );
-  severeImpact.casesForVentilatorsByRequestedTime = Math.floor(
+  severeImpact.casesForVentilatorsByRequestedTime = Math.round(
     0.02 * severeImpact.infectionsByRequestedTime
   );
   severeImpact.dollarsInFlight =
