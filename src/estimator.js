@@ -11,50 +11,45 @@ function truncateDecimals(number, digits = 0) {
 
   return truncatedNum / multiplier;
 }
-function covid19ImpactEstimator(data) {
-  const {
-    reportedCases,
-    timeToElapse,
-    periodType,
-    totalHospitalBeds,
-    region
-  } = data;
-  let noOfDays = 0;
+
+const getDays = (timeToElapse, periodType) => {
   switch (periodType) {
     case 'days':
-      noOfDays = timeToElapse;
-      break;
+      return timeToElapse;
     case 'weeks':
-      noOfDays = timeToElapse * 7;
-      break;
+      return timeToElapse * 7;
     case 'months':
-      noOfDays = timeToElapse * 30;
-      break;
+      return timeToElapse * 30;
     default:
       throw new Error('Period type not supported.');
   }
+};
+
+const impact = {};
+const severeImpact = {};
+
+const challenge1 = (reportedCases, noOfDays) => {
+  // calculate currentlyInfected
   const factor = truncateDecimals(noOfDays / 3);
   const projectionMultiplier = 2 ** factor;
-
-  const impact = {};
-  const severeImpact = {};
-  // challenge 1
   impact.currentlyInfected = reportedCases * 10;
   severeImpact.currentlyInfected = reportedCases * 50;
-
+  // calculate infectionsByRequestedTime
   impact.infectionsByRequestedTime =
     impact.currentlyInfected * projectionMultiplier;
   severeImpact.infectionsByRequestedTime =
     severeImpact.currentlyInfected * projectionMultiplier;
+};
 
-  // challenge 2
+const challenge2 = (totalHospitalBeds) => {
+  // calculate severeCasesByRequestedTime
   impact.severeCasesByRequestedTime = truncateDecimals(
     0.15 * impact.infectionsByRequestedTime
   );
   severeImpact.severeCasesByRequestedTime = truncateDecimals(
     0.15 * severeImpact.infectionsByRequestedTime
   );
-
+  // calculate hospitalBedsByRequestedTime
   const availableBedsForSevereCases = 0.35 * totalHospitalBeds;
   impact.hospitalBedsByRequestedTime = truncateDecimals(
     availableBedsForSevereCases - impact.severeCasesByRequestedTime
@@ -62,22 +57,24 @@ function covid19ImpactEstimator(data) {
   severeImpact.hospitalBedsByRequestedTime = truncateDecimals(
     availableBedsForSevereCases - severeImpact.severeCasesByRequestedTime
   );
+};
 
-  // challenge 3
+const challenge3 = (region, noOfDays) => {
+  // calculate casesForICUByRequestedTime
   impact.casesForICUByRequestedTime = truncateDecimals(
     0.05 * impact.infectionsByRequestedTime
   );
   severeImpact.casesForICUByRequestedTime = truncateDecimals(
     0.05 * severeImpact.infectionsByRequestedTime
   );
-
+  // calculate casesForVentilatorsByRequestedTime
   impact.casesForVentilatorsByRequestedTime = truncateDecimals(
     0.02 * impact.infectionsByRequestedTime
   );
   severeImpact.casesForVentilatorsByRequestedTime = truncateDecimals(
     0.02 * severeImpact.infectionsByRequestedTime
   );
-
+  // calculate dollarsInFlight
   const dollars =
     (region.avgDailyIncomePopulation * region.avgDailyIncomeInUSD) / noOfDays;
   impact.dollarsInFlight = truncateDecimals(
@@ -88,6 +85,25 @@ function covid19ImpactEstimator(data) {
     severeImpact.infectionsByRequestedTime * dollars,
     2
   );
+};
+
+function covid19ImpactEstimator(data) {
+  const {
+    reportedCases,
+    timeToElapse,
+    periodType,
+    totalHospitalBeds,
+    region
+  } = data;
+  const noOfDays = getDays(timeToElapse, periodType);
+  // challenge 1
+  challenge1(reportedCases, noOfDays);
+
+  // challenge 2
+  challenge2(totalHospitalBeds);
+
+  // challenge 3
+  challenge3(region, noOfDays);
 
   return { data, impact, severeImpact };
 }
