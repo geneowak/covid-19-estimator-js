@@ -31,7 +31,7 @@ app.use(morgan(format, { stream: accessLogStream }));
 // add routes
 app.use('/', router);
 
-const PORT = process.env.PORT || 3022;
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   // eslint-disable-next-line no-console
   console.log('Server running on port ', PORT);

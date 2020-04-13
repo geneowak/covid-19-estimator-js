@@ -35,58 +35,57 @@ function covid19ImpactEstimator(data) {
   }
   const factor = truncateDecimals(noOfDays / 3);
   const projectionMultiplier = 2 ** factor;
-  const availableBedsForSevereCases = Math.round(0.35 * totalHospitalBeds);
 
   const impact = {};
+  const severeImpact = {};
   // challenge 1
   impact.currentlyInfected = reportedCases * 10;
+  severeImpact.currentlyInfected = reportedCases * 50;
+
   impact.infectionsByRequestedTime =
     impact.currentlyInfected * projectionMultiplier;
+  severeImpact.infectionsByRequestedTime =
+    severeImpact.currentlyInfected * projectionMultiplier;
+
   // challenge 2
   impact.severeCasesByRequestedTime = truncateDecimals(
     0.15 * impact.infectionsByRequestedTime
   );
+  severeImpact.severeCasesByRequestedTime = truncateDecimals(
+    0.15 * severeImpact.infectionsByRequestedTime
+  );
+
+  const availableBedsForSevereCases = truncateDecimals(
+    0.35 * totalHospitalBeds
+  );
   impact.hospitalBedsByRequestedTime =
     availableBedsForSevereCases - impact.severeCasesByRequestedTime;
+  severeImpact.hospitalBedsByRequestedTime =
+    availableBedsForSevereCases - severeImpact.severeCasesByRequestedTime;
+
   // challenge 3
   impact.casesForICUByRequestedTime = truncateDecimals(
     0.05 * impact.infectionsByRequestedTime
   );
-  impact.casesForVentilatorsByRequestedTime = truncateDecimals(
-    0.02 * impact.infectionsByRequestedTime
-  );
-  impact.dollarsInFlight =
-    impact.infectionsByRequestedTime *
-    region.avgDailyIncomePopulation *
-    region.avgDailyIncomeInUSD *
-    noOfDays;
-  impact.dollarsInFlight = truncateDecimals(impact.dollarsInFlight, 2);
-
-  const severeImpact = {};
-  // challenge 1
-  severeImpact.currentlyInfected = reportedCases * 50;
-  severeImpact.infectionsByRequestedTime =
-    severeImpact.currentlyInfected * projectionMultiplier;
-  // challenge 2
-  severeImpact.severeCasesByRequestedTime = truncateDecimals(
-    0.15 * severeImpact.infectionsByRequestedTime
-  );
-  severeImpact.hospitalBedsByRequestedTime =
-    availableBedsForSevereCases - severeImpact.severeCasesByRequestedTime;
-  // challenge 3
   severeImpact.casesForICUByRequestedTime = truncateDecimals(
     0.05 * severeImpact.infectionsByRequestedTime
+  );
+
+  impact.casesForVentilatorsByRequestedTime = truncateDecimals(
+    0.02 * impact.infectionsByRequestedTime
   );
   severeImpact.casesForVentilatorsByRequestedTime = truncateDecimals(
     0.02 * severeImpact.infectionsByRequestedTime
   );
-  severeImpact.dollarsInFlight =
-    severeImpact.infectionsByRequestedTime *
-    region.avgDailyIncomePopulation *
-    region.avgDailyIncomeInUSD *
-    noOfDays;
+
+  const dollars =
+    region.avgDailyIncomePopulation * region.avgDailyIncomeInUSD * noOfDays;
+  impact.dollarsInFlight = truncateDecimals(
+    impact.infectionsByRequestedTime * dollars,
+    2
+  );
   severeImpact.dollarsInFlight = truncateDecimals(
-    severeImpact.dollarsInFlight,
+    severeImpact.infectionsByRequestedTime * dollars,
     2
   );
 
