@@ -6,7 +6,8 @@
   "private": false,
   "scripts": {
     "lint": "eslint ./src/",
-    "start": "nodemon node app.js"
+    "start:dev": "nodemon node app.js",
+    "start": "node app.js"
   },
   "dependencies": {
     "dotenv": "^8.2.0",

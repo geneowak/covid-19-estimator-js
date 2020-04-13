@@ -35,9 +35,7 @@ function covid19ImpactEstimator(data) {
   }
   const factor = truncateDecimals(noOfDays / 3);
   const projectionMultiplier = 2 ** factor;
-  const availableBedsForSevereCases = truncateDecimals(
-    0.35 * totalHospitalBeds
-  );
+  const availableBedsForSevereCases = Math.round(0.35 * totalHospitalBeds);
 
   const impact = {};
   // challenge 1
