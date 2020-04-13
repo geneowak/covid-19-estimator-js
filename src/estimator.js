@@ -4,13 +4,13 @@
  * @param {float} number number to truncate
  * @param {int} digits number of decimal places
  */
-function truncateDecimals(number, digits = 0) {
+const truncateDecimals = (number, digits = 0) => {
   const multiplier = digits === 0 ? 1 : 10 ** digits;
   const adjustedNum = number * multiplier;
   const truncatedNum = Math[adjustedNum < 0 ? 'ceil' : 'floor'](adjustedNum);
 
   return truncatedNum / multiplier;
-}
+};
 
 const getDays = (timeToElapse, periodType) => {
   switch (periodType) {
@@ -87,7 +87,7 @@ const challenge3 = (region, noOfDays) => {
   );
 };
 
-function covid19ImpactEstimator(data) {
+const covid19ImpactEstimator = (data) => {
   const {
     reportedCases,
     timeToElapse,
@@ -106,5 +106,6 @@ function covid19ImpactEstimator(data) {
   challenge3(region, noOfDays);
 
   return { data, impact, severeImpact };
-}
+};
+
 module.exports = covid19ImpactEstimator;
