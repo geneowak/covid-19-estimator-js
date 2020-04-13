@@ -79,7 +79,7 @@ function covid19ImpactEstimator(data) {
   );
 
   const dollars =
-    region.avgDailyIncomePopulation * region.avgDailyIncomeInUSD * noOfDays;
+    (region.avgDailyIncomePopulation * region.avgDailyIncomeInUSD) / noOfDays;
   impact.dollarsInFlight = truncateDecimals(
     impact.infectionsByRequestedTime * dollars,
     2
