@@ -1,4 +1,16 @@
 /* eslint-disable operator-linebreak */
+/**
+ *
+ * @param {float} number number to truncate
+ * @param {int} digits number of decimal places
+ */
+function truncateDecimals(number, digits = 0) {
+  const multiplier = digits === 0 ? 1 : 10 ** digits;
+  const adjustedNum = number * multiplier;
+  const truncatedNum = Math[adjustedNum < 0 ? 'ceil' : 'floor'](adjustedNum);
+
+  return truncatedNum / multiplier;
+}
 function covid19ImpactEstimator(data) {
   const {
     reportedCases,
@@ -21,57 +33,64 @@ function covid19ImpactEstimator(data) {
     default:
       throw new Error('Period type not supported.');
   }
-  const factor = Math.floor(noOfDays / 3);
+  const factor = truncateDecimals(noOfDays / 3);
   const projectionMultiplier = 2 ** factor;
-  const availableBedsForSevereCases = Math.round(0.35 * totalHospitalBeds);
+  const availableBedsForSevereCases = truncateDecimals(
+    0.35 * totalHospitalBeds
+  );
 
   const impact = {};
+  // challenge 1
   impact.currentlyInfected = reportedCases * 10;
   impact.infectionsByRequestedTime =
     impact.currentlyInfected * projectionMultiplier;
-  impact.severeCasesByRequestedTime = Math.round(
+  // challenge 2
+  impact.severeCasesByRequestedTime = truncateDecimals(
     0.15 * impact.infectionsByRequestedTime
   );
   impact.hospitalBedsByRequestedTime =
     availableBedsForSevereCases - impact.severeCasesByRequestedTime;
-  impact.casesForICUByRequestedTime = Math.round(
+  // challenge 3
+  impact.casesForICUByRequestedTime = truncateDecimals(
     0.05 * impact.infectionsByRequestedTime
   );
-  impact.casesForVentilatorsByRequestedTime = Math.round(
+  impact.casesForVentilatorsByRequestedTime = truncateDecimals(
     0.02 * impact.infectionsByRequestedTime
   );
   impact.dollarsInFlight =
-    Math.round(
-      impact.infectionsByRequestedTime *
-        region.avgDailyIncomePopulation *
-        region.avgDailyIncomeInUSD *
-        noOfDays *
-        100
-    ) / 100;
+    impact.infectionsByRequestedTime *
+    region.avgDailyIncomePopulation *
+    region.avgDailyIncomeInUSD *
+    noOfDays;
+  impact.dollarsInFlight = truncateDecimals(impact.dollarsInFlight, 2);
 
   const severeImpact = {};
+  // challenge 1
   severeImpact.currentlyInfected = reportedCases * 50;
   severeImpact.infectionsByRequestedTime =
     severeImpact.currentlyInfected * projectionMultiplier;
-  severeImpact.severeCasesByRequestedTime = Math.round(
+  // challenge 2
+  severeImpact.severeCasesByRequestedTime = truncateDecimals(
     0.15 * severeImpact.infectionsByRequestedTime
   );
   severeImpact.hospitalBedsByRequestedTime =
     availableBedsForSevereCases - severeImpact.severeCasesByRequestedTime;
-  severeImpact.casesForICUByRequestedTime = Math.round(
+  // challenge 3
+  severeImpact.casesForICUByRequestedTime = truncateDecimals(
     0.05 * severeImpact.infectionsByRequestedTime
   );
-  severeImpact.casesForVentilatorsByRequestedTime = Math.round(
+  severeImpact.casesForVentilatorsByRequestedTime = truncateDecimals(
     0.02 * severeImpact.infectionsByRequestedTime
   );
   severeImpact.dollarsInFlight =
-    Math.round(
-      severeImpact.infectionsByRequestedTime *
-        region.avgDailyIncomePopulation *
-        region.avgDailyIncomeInUSD *
-        noOfDays *
-        100
-    ) / 100;
+    severeImpact.infectionsByRequestedTime *
+    region.avgDailyIncomePopulation *
+    region.avgDailyIncomeInUSD *
+    noOfDays;
+  severeImpact.dollarsInFlight = truncateDecimals(
+    severeImpact.dollarsInFlight,
+    2
+  );
 
   return { data, impact, severeImpact };
 }
