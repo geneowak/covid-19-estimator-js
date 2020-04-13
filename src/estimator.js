@@ -55,13 +55,13 @@ function covid19ImpactEstimator(data) {
     0.15 * severeImpact.infectionsByRequestedTime
   );
 
-  const availableBedsForSevereCases = truncateDecimals(
-    0.35 * totalHospitalBeds
+  const availableBedsForSevereCases = 0.35 * totalHospitalBeds;
+  impact.hospitalBedsByRequestedTime = truncateDecimals(
+    availableBedsForSevereCases - impact.severeCasesByRequestedTime
   );
-  impact.hospitalBedsByRequestedTime =
-    availableBedsForSevereCases - impact.severeCasesByRequestedTime;
-  severeImpact.hospitalBedsByRequestedTime =
-    availableBedsForSevereCases - severeImpact.severeCasesByRequestedTime;
+  severeImpact.hospitalBedsByRequestedTime = truncateDecimals(
+    availableBedsForSevereCases - severeImpact.severeCasesByRequestedTime
+  );
 
   // challenge 3
   impact.casesForICUByRequestedTime = truncateDecimals(
