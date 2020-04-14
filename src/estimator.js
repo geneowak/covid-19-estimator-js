@@ -34,8 +34,10 @@ const challenge1 = (reportedCases, noOfDays) => {
   impact.currentlyInfected = reportedCases * 10;
   severeImpact.currentlyInfected = reportedCases * 50;
   // calculate infectionsByRequestedTime
+  // eslint-disable-next-line operator-linebreak
   impact.infectionsByRequestedTime =
     impact.currentlyInfected * projectionMultiplier;
+  // eslint-disable-next-line operator-linebreak
   severeImpact.infectionsByRequestedTime =
     severeImpact.currentlyInfected * projectionMultiplier;
 };
