@@ -17,7 +17,7 @@ if (!fs.existsSync(logDir)) {
   fs.mkdirSync(logDir);
 }
 // specify log format
-const format = ':method\t\t:url\t\t:status\t\t:response-time ms';
+const format = ':method\t\t:url\t\t:status\t\t:response-time[0]ms';
 // create a write stream (in append mode)
 const accessLogStream = fs.createWriteStream(
   path.join(logDir, 'requests.log'),
