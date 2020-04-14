@@ -1,4 +1,3 @@
-/* eslint-disable operator-linebreak */
 /**
  *
  * @param {float} number number to truncate
