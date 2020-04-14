@@ -76,12 +76,10 @@ const challenge3 = (region, noOfDays) => {
   // calculate dollarsInFlight
   const incomes = region.avgDailyIncomePopulation * region.avgDailyIncomeInUSD;
   impact.dollarsInFlight = truncateDecimals(
-    (impact.infectionsByRequestedTime * incomes) / noOfDays,
-    2
+    (impact.infectionsByRequestedTime * incomes) / noOfDays
   );
   severeImpact.dollarsInFlight = truncateDecimals(
-    (severeImpact.infectionsByRequestedTime * incomes) / noOfDays,
-    2
+    (severeImpact.infectionsByRequestedTime * incomes) / noOfDays
   );
 };
 
